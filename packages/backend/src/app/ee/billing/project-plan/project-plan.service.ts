@@ -21,7 +21,7 @@ export const plansService = {
         return projectPlanRepo.findOneByOrFail({ projectId })
     },
     async removeDailyTasksAndUpdateTasks({ projectId, tasks }: { projectId: ProjectId, tasks: number }): Promise<void> {
-        await projectPlanRepo.update(projectId, {
+        await projectPlanRepo.update({ projectId }, {
             tasks,
             tasksPerDay: null,
         })
@@ -80,7 +80,7 @@ async function createInitialPlan({ projectId }: { projectId: ProjectId }): Promi
             stripeSubscriptionId: null,
             subscriptionStartDatetime: project.created,
         }, ['projectId'])
-        return projectPlanRepo.findOneByOrFail({ projectId })
+        return await projectPlanRepo.findOneByOrFail({ projectId })
     }
     finally {
         await projectPlanLock.release()
